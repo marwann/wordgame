@@ -6,6 +6,8 @@ This is a web-based daily word game inspired by Scrabble, where players use a fi
 
 This is an attempt at vibe coding a simple game using Cursor and other AI tools, to understand the underlying mechanics of the AI and not turn crazy when it does sh!t. And it did.
 
+Game is using an English dictionary (words_alpha.txt) but you can change the language easily using any other txt.
+
 ## Features
 
 *   **Daily Challenge:** Everyone gets the same 15 letters and grid layout each day.
@@ -40,6 +42,11 @@ This is an attempt at vibe coding a simple game using Cursor and other AI tools,
     cd wordgame
     ```
 2.  **Backend Setup:** This frontend requires a backend server to handle API requests for daily letters (`/api/daily-letters`) and score submission/retrieval (`/api/scores`). Ensure the backend server is running (refer to its specific setup instructions if separate).
+3. **Database Setup:**
+```
+sqlite3 db/wordgame.db < db/schema.sql
+sqlite3 db/wordgame.db < db/seed_data.sql
+```
 3.  **Serve Frontend:** You need a simple HTTP server to serve the `index.html`, `script.js`, `styles.css`, and `words_alpha.txt` files. Python's built-in server is an easy option:
     ```bash
     python3 -m http.server
