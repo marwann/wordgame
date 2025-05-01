@@ -1,0 +1,14 @@
+{
+  "name": "wordgame-server",
+  "version": "1.0.0",
+  "description": "Word game server with fast word validation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "sqlite3": "^5.1.7"
+  }
+}

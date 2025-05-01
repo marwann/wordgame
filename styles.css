@@ -1,0 +1,548 @@
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --accent-color: #FFC107;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --grid-size: 5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+.game-board {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), 1fr);
+    gap: 2px;
+    background-color: #ddd;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.cell {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #f5f5f5;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.cell:hover:not(.occupied) {
+    background-color: #eaeaea;
+}
+
+.cell.drag-over:not(.occupied) {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+
+.cell.occupied {
+    background-color: #f9e4b7;
+}
+
+.cell.center-cell {
+    background-color: #ffcccc;
+    position: relative;
+}
+
+.cell.center-cell::after {
+    content: "★";
+    position: absolute;
+    font-size: 20px;
+    color: rgba(255, 0, 0, 0.5);
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.cell.double-letter {
+    background-color: #b3e0ff;
+}
+
+.cell.triple-letter {
+    background-color: #4da6ff;
+}
+
+.cell.double-word {
+    background-color: #ffb3b3;
+}
+
+.cell.triple-word {
+    background-color: #ff8080;
+}
+
+.letter {
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.letter-value {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: #666;
+}
+
+/* Special cell styles */
+.cell.double-letter {
+    background-color: #b3e0ff;
+}
+
+.cell.triple-letter {
+    background-color: #4da6ff;
+}
+
+.cell.double-word {
+    background-color: #ffb3b3;
+}
+
+.cell.triple-word {
+    background-color: #ff8080;
+}
+
+/* Remove all before content for multiplier labels */
+.cell.double-letter::before,
+.cell.triple-letter::before,
+.cell.double-word::before,
+.cell.triple-word::before {
+    content: none;
+}
+
+.letter-rack {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.rack {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.rack-letter {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    position: relative;
+    background-color: #f9e4b7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.rack-letter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.rack-letter.selected {
+    background-color: #f5d28e;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rack-letter.dragging {
+    opacity: 0.6;
+}
+
+.letter-point-value {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#cancel-word {
+    background-color: #f44336; /* Red color for cancel action */
+}
+
+#new-game {
+    background-color: var(--secondary-color); /* Blue color for new game */
+}
+
+.found-words, .leaderboard {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#word-list, #leaderboard-list {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#word-list li, #leaderboard-list li {
+    background-color: #e0e0e0;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 1.1em;
+}
+
+#leaderboard-list {
+    flex-direction: column;
+    gap: 5px;
+}
+
+#leaderboard-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-left: 4px solid var(--primary-color);
+}
+
+@media (max-width: 600px) {
+    .cell, .rack-letter {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    button {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+.current-word {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.word-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 1.3em;
+}
+
+#current-word-text {
+    font-weight: bold;
+    min-width: 100px;
+}
+
+.score-preview {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.score-preview.valid-word {
+    background-color: #4CAF50;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+.legend {
+    display: none;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.notification.error {
+    background-color: #d9534f;
+}
+
+.notification.success {
+    background-color: #5cb85c;
+}
+
+/* Multiplier label in cells */
+.multiplier-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* Enhanced leaderboard styling */
+.leaderboard {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.leaderboard h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#leaderboard-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.leaderboard-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 8px;
+}
+
+.leaderboard-entry {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 8px 15px !important;
+    margin-bottom: 5px;
+    border-left: 4px solid #e0e0e0;
+    background-color: #f9f9f9;
+    border-radius: 0;
+    transition: all 0.2s ease;
+}
+
+.leaderboard-entry:hover {
+    background-color: #f0f0f0;
+    transform: translateX(2px);
+}
+
+.leaderboard-entry.current-player {
+    border-left: 4px solid var(--primary-color);
+    background-color: #f0fff0;
+} 
+
+/* --- Modal Styles --- */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 450px; /* Maximum width */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.modal-input-container {
+    margin-bottom: 20px;
+}
+.modal-input-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+}
+.modal-input-container input[type="text"] {
+    width: calc(100% - 20px); /* Adjust width */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around; /* Distribute buttons */
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 100px; /* Ensure buttons have some width */
+}
+
+.modal-buttons button.confirm {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+.modal-buttons button.confirm:hover {
+    background-color: #45a049;
+}
+
+.modal-buttons button.cancel {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+.modal-buttons button.cancel:hover {
+    background-color: #da190b;
+}
+
+.modal-buttons button.secondary {
+    background-color: #aaa; /* Grey */
+    color: white;
+}
+.modal-buttons button.secondary:hover {
+    background-color: #888;
+}
+/* --- End Modal Styles --- */

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word of the Day - Word Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Word of the Day</h1>
+            <div class="game-info">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="letters-left">Letters left: <span id="letters-left">15</span></div>
+            </div>
+        </header>
+
+        <div class="game-board">
+            <div id="grid" class="grid"></div>
+        </div>
+
+        <div class="legend">
+            <h2>Cell Legend</h2>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color double-letter"></div>
+                    <span>Double Letter</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color triple-letter"></div>
+                    <span>Triple Letter</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color double-word"></div>
+                    <span>Double Word</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color triple-word"></div>
+                    <span>Triple Word</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="current-word">
+            <h2>Current Word:</h2>
+            <div class="word-preview">
+                <span id="current-word-text"></span>
+                <span id="current-word-score" class="score-preview"></span>
+            </div>
+        </div>
+
+        <div class="letter-rack">
+            <h2>Your Letters:</h2>
+            <div id="rack" class="rack"></div>
+        </div>
+
+        <div class="controls">
+            <button id="submit-word">Submit Word</button>
+            <button id="cancel-word">Cancel Word</button>
+            <button id="new-game">New Game</button>
+            <button id="end-game">End Game</button>
+        </div>
+
+        <div class="found-words">
+            <h2>Found Words:</h2>
+            <ul id="word-list"></ul>
+        </div>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol id="leaderboard-list"></ol>
+        </div>
+    </div>
+
+    <!-- Add Modal Structure -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <h3 id="modal-title">Modal Title</h3>
+            <p id="modal-message">Modal message goes here.</p>
+            <div id="modal-input-container" class="modal-input-container" style="display: none;">
+                <label for="modal-input">Name:</label>
+                <input type="text" id="modal-input" placeholder="Enter your name">
+            </div>
+            <div id="modal-buttons" class="modal-buttons">
+                <!-- Buttons will be added dynamically by JS -->
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Structure -->
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize the game when the page loads
+        window.addEventListener('load', () => {
+            console.log('Page loaded, initializing game...');
+            // Clear any existing game
+            if (window.game) {
+                delete window.game;
+            }
+            // Create a fresh instance
+            window.game = new WordOfTheDay();
+        });
+    </script>
+</body>
+</html> 
