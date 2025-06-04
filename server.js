@@ -2,14 +2,32 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
+
+// Load dictionary into memory once at startup
+const dictionaryPath = path.join(__dirname, 'words_alpha.txt');
+let dictionary = new Set();
+try {
+  const fileContent = fs.readFileSync(dictionaryPath, 'utf8')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n');
+  fileContent.split('\n').forEach(word => {
+    const w = word.trim().toLowerCase();
+    if (w) dictionary.add(w);
+  });
+  console.log(`Loaded ${dictionary.size} words into memory`);
+} catch (err) {
+  console.error('Failed to load dictionary:', err);
+}
 
 // Create Express app
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.static('.'));
 app.use(express.json());
+app.use(cors());
 
 // Create database directory if it doesn't exist
 const dbDir = path.join(__dirname, 'db');
@@ -158,25 +176,22 @@ app.get('/api/validate', (req, res) => {
     return res.status(400).json({ error: 'Word parameter is required' });
   }
   
-  // Check if the word is in the dictionary
-  const wordPath = path.join(__dirname, 'words_alpha.txt');
   const wordToCheck = word.toLowerCase().trim();
-  
-  try {
-    // Read the file and normalize line endings
-    const fileContent = fs.readFileSync(wordPath, 'utf8')
-      .replace(/\r\n/g, '\n')  // Convert Windows line endings
-      .replace(/\r/g, '\n');   // Convert old Mac line endings
-    
-    // Split into array of words and check for exact match
-    const words = fileContent.split('\n').map(w => w.trim());
-    const isValid = words.includes(wordToCheck);
-    
-    res.json({ valid: isValid });
-  } catch (error) {
-    console.error('Error validating word:', error);
-    res.status(500).json({ error: 'Error validating word' });
+
+  // If dictionary failed to load, fall back to file check
+  if (dictionary.size === 0) {
+    try {
+      const fileContent = fs.readFileSync(dictionaryPath, 'utf8')
+        .replace(/\r\n/g, '\n')
+        .replace(/\r/g, '\n');
+      fileContent.split('\n').forEach(w => dictionary.add(w.trim().toLowerCase()));
+    } catch (error) {
+      console.error('Error loading dictionary:', error);
+      return res.status(500).json({ error: 'Error validating word' });
+    }
   }
+
+  res.json({ valid: dictionary.has(wordToCheck) });
 });
 
 // Start the server
